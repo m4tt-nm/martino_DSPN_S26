@@ -1,0 +1,456 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/m4tt-nm/martino_DSPN_S26/blob/master/final\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "jiVM1z34ig__"
+      },
+      "source": [
+        "Matthew Martino"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "s1iC2lQoihAB"
+      },
+      "source": [
+        "# 1. Effects of Contrast, Spatial Frequency, and Eccentricity on Reaction Time"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#**2. BACKROUND**"
+      ],
+      "metadata": {
+        "id": "vZ5VrW_KqEUF"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "gSwuQjfJihAB"
+      },
+      "source": [
+        "## Introduction"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "0S6cA6z5ihAC"
+      },
+      "source": [
+        "   The primate visual system processes information through two distinct parallel streams—the parvocellular (P) and magnocellular (M) pathways which start at the retina and dictate our ability to perceive the visual world. The P pathway is specialized for high-resolution detail (high spatial frequency) and color contrast, particularly red/green isoluminance, but it is primarily concentrated in the center of our vision. Conversely, the M pathway is optimized for rapid motion detection and luminance contrast. While this pathway is colorblind, it is distributed across the entire retina, making it the primary driver of peripheral vision. Understanding the constraints of these pathways is essential for explaining why we often fail to detect certain types of motion in our periphery, which has significant implications for real-world safety and visual ergonomics.\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "##Experimental Methods"
+      ],
+      "metadata": {
+        "id": "g-ligPsPm6Fh"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "We exploited the sensitivities of each pathway to test motion detection by manipulating the visual properties of a meter stick falling with gravity. Participants (n = 20) responded via button press when they noticed one of four meter sticks start to drop, in central or peripheral vision. Meter sticks were painted with vertically-oriented bands along their length to represent a grating pattern. We manipulated the spatial frequency and contrast of the bands for each meter stick. Two meter sticks had high luminance contrast with black (0.25 cd/m²) and white (5.0 cd/m²) bands. The other two meter sticks were rendered isoluminant (M = 1.3 cd/m² ± 0.2 cd/m²). Spatial frequencies were manipulated by varying band-widths between 9/16\" (0.10 c/deg) and 3/16\" (0.31 c/deg)."
+      ],
+      "metadata": {
+        "id": "wZSIEFDtlZL9"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "The experiment consisted of four blocks, with eccentricity (central vs peripheral) manipulated between blocks (ABBA design). To force participants to respond to motion at a certain eccentricity, they had to maintain fixation on a cross presented either the left or right side of a computer monitor in front of them. For every trial, the ruler was presented to the right of the monitor. Each block consisted of 32 trials (8 of each stimulus) with four additional training trials at the start of the first and second blocks when participants were first exposed to each eccentricity. Training trials were not recorded."
+      ],
+      "metadata": {
+        "id": "G8qTYpsAlqGv"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "To initiate a trial, researchers would attach one of the four meter sticks to an electromagnet fixed above participants' field of view and activate a fixation check. Fixations were determined by an eyetracker attached to the bottom of the monitor fixation crosses were presented on. If the eyetracker detected a gaze maintained within 3° of the fixation cross for 0.35 seconds, a trial-specific timer would start. Each trial’s timer was randomized within an exponential decay distribution (minimum = 1 second, maximum = 8 seconds) to reduce participants’ ability to anticipate drop timing. When the timer ended, the meterstick would drop. Participants pressed a button on a response pad held in their lap as fast as they noticed it dropping."
+      ],
+      "metadata": {
+        "id": "uXI8lpYZnTxA"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#**3.** **VARIABLES**\n",
+        "\n",
+        "   **Subject ID**: *participant* (int)\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "gSeHsC-wbD7X"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "We had initially collected 26 participants, but excluded 6 (due to dosing off mid-experiment)"
+      ],
+      "metadata": {
+        "id": "aYeqmzEJqmpB"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Block Information/Condition**:\n",
+        "* *fixation_cond* - defined by the visual field stimuli were presented in (central or peripheral). In the central condition, stimuli were presented 2 deg visual angle to the left of fixation. In the peripheral conditon, stimuli were presented 30 deg visual angle to the left of fixation. (chr)\n",
+        "\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "OCQUF9GFiW_D"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Each block consisted of 32 trials with each participant completing four blocks during the experiment."
+      ],
+      "metadata": {
+        "id": "t7d6gJmbr8Hj"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Trial Information/Conditions**:\n",
+        "\n",
+        "*   *trialNumber* - min 1, max 32 (int)\n",
+        "*   *ruler* - the color pattern of the ruler used (chr)\n",
+        "*   *frequency* - the spatial frequency pattern of the ruler used (chr)\n",
+        "*   *stick* - a combination of ruler and frequency (chr)\n",
+        "*   *rt* - the speed at which the participant pressed a button after the ruler dropped (in milliseconds) (dbl)\n"
+      ],
+      "metadata": {
+        "id": "Re9ejSjUi4rk"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2392 trials were included for analysis after removing 9.5% of all trials for falling outside of our inclusion criterion (defined in the next section)"
+      ],
+      "metadata": {
+        "id": "kps6UE7YrFzN"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#**4. HYPOTHESES**"
+      ],
+      "metadata": {
+        "id": "9bQEzNGVt0Hu"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "The present study hypothesized that RTs would reflect the anatomical and functional constraints of the parvocellular and magnocellular pathways. Specifically, we predicted significant interactions between contrast type, spatial frequency (SF), and eccentricity. We hypothesized that: (1) high SF stimuli would yield slower RTs due to decreased magnocellular pathway sensitivity; (2) isoluminant (red and green) stimuli would yield slower RTs than high luminance contrast (black and white) stimuli as the magnocellular pathway relies on luminance contrast and is largely colorblind; and (3) peripheral presentations would yield slower RTs across all stimuli due to the reduction in retinal ganglion cell density outside the fovea, especially P cells. Furthermore, we predicted (4) the greatest center-to-periphery RT difference would occur for high spatial frequency red/green isoluminant stimuli, as the periphery lacks the parvocellular pathways required to process those stimuli, while the magnocellular pathways are functionally blind to them.\n"
+      ],
+      "metadata": {
+        "id": "b8H7NO3bulk7"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "###Formula notation:"
+      ],
+      "metadata": {
+        "id": "YZUV9Q0vviiS"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "The general model for reaction time in our study can be written as:\n",
+        "$$RT = f(C, SF, E) + (1|P) + \\epsilon$$\n",
+        "in which the relationship between contrast, spatial frequency, and eccentricity determines reaction time given the random effect of participant due to our repeated measures design. This can also be written as the following mixed effects model:\n",
+        "$$RT_{i} = \\beta_0 + \\beta_1 C_i + \\beta_2 F_i + \\beta_3 E_i + \\beta_4(C_i \\times F_i \\times E_i) + \\gamma_{P[i]} + \\epsilon_i$$"
+      ],
+      "metadata": {
+        "id": "glpzIo0wvr98"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "To redefine our hypotheses given a reference level of black and white contrast, low spatial frequency, and central eccentricity, we predict that:"
+      ],
+      "metadata": {
+        "id": "1ZG1FXELwvZY"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "1. Red and green isoluminant trials will have higher reaction times than black and white high luminance trials $$\\beta_1 > 0$$\n",
+        "\n",
+        "2. High spatial frequency trials will have higher reaction times than low spatial frequency trials $$\\beta_2 > 0$$\n",
+        "\n",
+        "3. Peripheral eccentricity trials will have higher reaction times than central eccentricity trials $$\\beta_3 > 0$$\n",
+        "\n",
+        "4. The greatest reaction time deficit will occur when comparing red and green isoluminant, high spatial frequency trials between peripheral and central eccentricities. $$\\beta_4 > 0$$"
+      ],
+      "metadata": {
+        "id": "k4lrJb6jxb6W"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "-YR4qYlEihAI"
+      },
+      "source": [
+        "#**5. DATA ORGANIZATION**"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "####Raw Data into Merged Dataframe"
+      ],
+      "metadata": {
+        "id": "scxDjtkRUf8r"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "wgXoehsNihAJ"
+      },
+      "source": [
+        "This study was conducted in PsychoPy 2023.1.3. After each block, a csv file was written out by PsychoPy which was merged across all blocks and participants using a for loop in R. An example file name in our raw dataset is \"21561_rdtBWRG_2025-11-12_11h54.32.744.csv\" in which the first 5 characters represent participant ID followed by the task ID and timestamp of the csv file's creation."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "When reading through each block, specific variables of interest were preserved (*participant, ruler, frequency*, drop times, button press times, *fixation_cond, trialNumber*). Trials with missing values for *ruler* were excluded indicating some pre-trial error or that the researcher skipped the trial. Blocks were merged within participants before being added to the full cohort data frame."
+      ],
+      "metadata": {
+        "id": "bf45fDbrYZm9"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "The reaction time (*rt*) variable was created by subtracting the time point a ruler dropped from the time point the participant pressed the button. **rt** was multiplied by 1000 to change its units from seconds to milliseconds. After this we removed drop time and press time variables from the data frame. Minimum and maximum reaction time thresholds were set for each participant through a universal standard minimum reaction time (150 ms) and by calculating two standard deviations above the participants' reaction time mean. All trials with reaction times outside of this threshold were excluded (6.5% of trial data).\n",
+        "\n",
+        "We also excluded multiple participants for dosing off during our task, removing them from the full dataset."
+      ],
+      "metadata": {
+        "id": "R7ugzEJYXKPq"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "After exclusions, we merged individual participant data frames to a full cohort dataframe titled \"full_CData\". Individual trials were marked down by researchers to be filtered from the data pre-analysis due to participant error or loss of focus. Finally we wrote out the complete merged dataframe as a csv file. The data is stored locally in both its raw and merged forms, but will only be uploaded to this notebook post-merge."
+      ],
+      "metadata": {
+        "id": "zeP4PkCcXG23"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "###Resulting Dataframe"
+      ],
+      "metadata": {
+        "id": "B8v_H1B7dO1Y"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "library(tidyverse)\n",
+        "full_C <- read.csv(\"https://raw.githubusercontent.com/m4tt-nm/martino_DSPN_S26/refs/heads/master/final/full_CData.csv\")\n",
+        "head(full_C)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 338
+        },
+        "id": "85e6jVlyfiM6",
+        "outputId": "340ce381-2dd2-4aa7-d8b8-6098d5561c51"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "Installing package into ‘/usr/local/lib/R/site-library’\n",
+            "(as ‘lib’ is unspecified)\n",
+            "\n"
+          ]
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/html": [
+              "<table class=\"dataframe\">\n",
+              "<caption>A data.frame: 6 × 7</caption>\n",
+              "<thead>\n",
+              "\t<tr><th></th><th scope=col>ruler</th><th scope=col>frequency</th><th scope=col>participant</th><th scope=col>fixation_cond</th><th scope=col>trialNumber</th><th scope=col>rt</th><th scope=col>stick</th></tr>\n",
+              "\t<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th></tr>\n",
+              "</thead>\n",
+              "<tbody>\n",
+              "\t<tr><th scope=row>1</th><td>BW</td><td>High</td><td>21181</td><td>central</td><td>1</td><td>301.0732</td><td>BW.High</td></tr>\n",
+              "\t<tr><th scope=row>2</th><td>RG</td><td>High</td><td>21181</td><td>central</td><td>2</td><td>350.4544</td><td>RG.High</td></tr>\n",
+              "\t<tr><th scope=row>3</th><td>RG</td><td>Low </td><td>21181</td><td>central</td><td>3</td><td>284.4667</td><td>RG.Low </td></tr>\n",
+              "\t<tr><th scope=row>4</th><td>BW</td><td>Low </td><td>21181</td><td>central</td><td>4</td><td>233.3942</td><td>BW.Low </td></tr>\n",
+              "\t<tr><th scope=row>5</th><td>BW</td><td>Low </td><td>21181</td><td>central</td><td>5</td><td>317.8640</td><td>BW.Low </td></tr>\n",
+              "\t<tr><th scope=row>6</th><td>RG</td><td>High</td><td>21181</td><td>central</td><td>7</td><td>283.5779</td><td>RG.High</td></tr>\n",
+              "</tbody>\n",
+              "</table>\n"
+            ],
+            "text/markdown": "\nA data.frame: 6 × 7\n\n| <!--/--> | ruler &lt;chr&gt; | frequency &lt;chr&gt; | participant &lt;int&gt; | fixation_cond &lt;chr&gt; | trialNumber &lt;int&gt; | rt &lt;dbl&gt; | stick &lt;chr&gt; |\n|---|---|---|---|---|---|---|---|\n| 1 | BW | High | 21181 | central | 1 | 301.0732 | BW.High |\n| 2 | RG | High | 21181 | central | 2 | 350.4544 | RG.High |\n| 3 | RG | Low  | 21181 | central | 3 | 284.4667 | RG.Low  |\n| 4 | BW | Low  | 21181 | central | 4 | 233.3942 | BW.Low  |\n| 5 | BW | Low  | 21181 | central | 5 | 317.8640 | BW.Low  |\n| 6 | RG | High | 21181 | central | 7 | 283.5779 | RG.High |\n\n",
+            "text/latex": "A data.frame: 6 × 7\n\\begin{tabular}{r|lllllll}\n  & ruler & frequency & participant & fixation\\_cond & trialNumber & rt & stick\\\\\n  & <chr> & <chr> & <int> & <chr> & <int> & <dbl> & <chr>\\\\\n\\hline\n\t1 & BW & High & 21181 & central & 1 & 301.0732 & BW.High\\\\\n\t2 & RG & High & 21181 & central & 2 & 350.4544 & RG.High\\\\\n\t3 & RG & Low  & 21181 & central & 3 & 284.4667 & RG.Low \\\\\n\t4 & BW & Low  & 21181 & central & 4 & 233.3942 & BW.Low \\\\\n\t5 & BW & Low  & 21181 & central & 5 & 317.8640 & BW.Low \\\\\n\t6 & RG & High & 21181 & central & 7 & 283.5779 & RG.High\\\\\n\\end{tabular}\n",
+            "text/plain": [
+              "  ruler frequency participant fixation_cond trialNumber rt       stick  \n",
+              "1 BW    High      21181       central       1           301.0732 BW.High\n",
+              "2 RG    High      21181       central       2           350.4544 RG.High\n",
+              "3 RG    Low       21181       central       3           284.4667 RG.Low \n",
+              "4 BW    Low       21181       central       4           233.3942 BW.Low \n",
+              "5 BW    Low       21181       central       5           317.8640 BW.Low \n",
+              "6 RG    High      21181       central       7           283.5779 RG.High"
+            ]
+          },
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "And to tidy up the dataframe by more cleanly ordering variables:\n"
+      ],
+      "metadata": {
+        "id": "Sqbj-U1ThFA1"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "full_C <- full_C %>%\n",
+        "  select(participant, trialNumber, ruler, frequency, stick, fixation_cond, rt)\n",
+        "head(full_C)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 286
+        },
+        "id": "l5z_QZechebG",
+        "outputId": "858baf3e-5a83-45fb-d087-c79f6bc91dac"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/html": [
+              "<table class=\"dataframe\">\n",
+              "<caption>A data.frame: 6 × 7</caption>\n",
+              "<thead>\n",
+              "\t<tr><th></th><th scope=col>participant</th><th scope=col>trialNumber</th><th scope=col>ruler</th><th scope=col>frequency</th><th scope=col>stick</th><th scope=col>fixation_cond</th><th scope=col>rt</th></tr>\n",
+              "\t<tr><th></th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>\n",
+              "</thead>\n",
+              "<tbody>\n",
+              "\t<tr><th scope=row>1</th><td>21181</td><td>1</td><td>BW</td><td>High</td><td>BW.High</td><td>central</td><td>301.0732</td></tr>\n",
+              "\t<tr><th scope=row>2</th><td>21181</td><td>2</td><td>RG</td><td>High</td><td>RG.High</td><td>central</td><td>350.4544</td></tr>\n",
+              "\t<tr><th scope=row>3</th><td>21181</td><td>3</td><td>RG</td><td>Low </td><td>RG.Low </td><td>central</td><td>284.4667</td></tr>\n",
+              "\t<tr><th scope=row>4</th><td>21181</td><td>4</td><td>BW</td><td>Low </td><td>BW.Low </td><td>central</td><td>233.3942</td></tr>\n",
+              "\t<tr><th scope=row>5</th><td>21181</td><td>5</td><td>BW</td><td>Low </td><td>BW.Low </td><td>central</td><td>317.8640</td></tr>\n",
+              "\t<tr><th scope=row>6</th><td>21181</td><td>7</td><td>RG</td><td>High</td><td>RG.High</td><td>central</td><td>283.5779</td></tr>\n",
+              "</tbody>\n",
+              "</table>\n"
+            ],
+            "text/markdown": "\nA data.frame: 6 × 7\n\n| <!--/--> | participant &lt;int&gt; | trialNumber &lt;int&gt; | ruler &lt;chr&gt; | frequency &lt;chr&gt; | stick &lt;chr&gt; | fixation_cond &lt;chr&gt; | rt &lt;dbl&gt; |\n|---|---|---|---|---|---|---|---|\n| 1 | 21181 | 1 | BW | High | BW.High | central | 301.0732 |\n| 2 | 21181 | 2 | RG | High | RG.High | central | 350.4544 |\n| 3 | 21181 | 3 | RG | Low  | RG.Low  | central | 284.4667 |\n| 4 | 21181 | 4 | BW | Low  | BW.Low  | central | 233.3942 |\n| 5 | 21181 | 5 | BW | Low  | BW.Low  | central | 317.8640 |\n| 6 | 21181 | 7 | RG | High | RG.High | central | 283.5779 |\n\n",
+            "text/latex": "A data.frame: 6 × 7\n\\begin{tabular}{r|lllllll}\n  & participant & trialNumber & ruler & frequency & stick & fixation\\_cond & rt\\\\\n  & <int> & <int> & <chr> & <chr> & <chr> & <chr> & <dbl>\\\\\n\\hline\n\t1 & 21181 & 1 & BW & High & BW.High & central & 301.0732\\\\\n\t2 & 21181 & 2 & RG & High & RG.High & central & 350.4544\\\\\n\t3 & 21181 & 3 & RG & Low  & RG.Low  & central & 284.4667\\\\\n\t4 & 21181 & 4 & BW & Low  & BW.Low  & central & 233.3942\\\\\n\t5 & 21181 & 5 & BW & Low  & BW.Low  & central & 317.8640\\\\\n\t6 & 21181 & 7 & RG & High & RG.High & central & 283.5779\\\\\n\\end{tabular}\n",
+            "text/plain": [
+              "  participant trialNumber ruler frequency stick   fixation_cond rt      \n",
+              "1 21181       1           BW    High      BW.High central       301.0732\n",
+              "2 21181       2           RG    High      RG.High central       350.4544\n",
+              "3 21181       3           RG    Low       RG.Low  central       284.4667\n",
+              "4 21181       4           BW    Low       BW.Low  central       233.3942\n",
+              "5 21181       5           BW    Low       BW.Low  central       317.8640\n",
+              "6 21181       7           RG    High      RG.High central       283.5779"
+            ]
+          },
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#**6. ANALYSIS**"
+      ],
+      "metadata": {
+        "id": "t06VnsH1t9Ae"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#**7. CONCLUSIONS**"
+      ],
+      "metadata": {
+        "id": "9phmlFCQuF-V"
+      }
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "R",
+      "language": "R",
+      "name": "ir"
+    },
+    "language_info": {
+      "codemirror_mode": "r",
+      "file_extension": ".r",
+      "mimetype": "text/x-r-source",
+      "name": "R",
+      "pygments_lexer": "r",
+      "version": "3.6.2"
+    },
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
